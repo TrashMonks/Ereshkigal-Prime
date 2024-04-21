@@ -1,9 +1,12 @@
+const schedule = require('node-schedule')
 const {fatal} = require('../log')
 
 const BATCH_ADMISSION_CAP = 50
 
 let onboardingCategoryIds
 let admissionChannelId
+let reminderChannelId
+let reminderMessage
 let memberRoleId
 let patronRoleIds
 let freezerRoleIds
@@ -12,6 +15,8 @@ const initialize = ({config}) => {
     ({
         onboardingCategoryIds,
         admissionChannelId,
+        reminderChannelId,
+        reminderMessage,
         memberRoleId,
         patronRoleIds,
         freezerRoleIds,
@@ -26,6 +31,18 @@ const initialize = ({config}) => {
     if (admissionChannelId === undefined) {
         fatal(
 `Please specify an admission logging channel by editing the "admissionChannelId" field under "onboarding".`
+        )
+    }
+
+    if (reminderChannelId === undefined) {
+        fatal(
+`Please specify a reminder logging channel by editing the "reminderChannelId" field under "onboarding".`
+        )
+    }
+
+    if (reminderMessage === undefined) {
+        fatal(
+`Please specify a reminder message by editing the "reminderMessage" field under "onboarding".`
         )
     }
 
@@ -46,6 +63,19 @@ const initialize = ({config}) => {
 `Please list out freezer roles by editing the "freezerRoleIds" field under "onboarding".`
         )
     }
+}
+
+const ready = ({guild}) => {
+    const remind = async () => {
+        const reminderChannel = guild.channels.resolve(reminderChannelId)
+        await reminderChannel.send({
+            content: reminderMessage,
+            allowedMentions: {parse: ['roles', 'users']},
+        })
+    }
+
+    schedule.scheduleJob({hour: 12, dayOfWeek: 1}, remind)
+    schedule.scheduleJob({hour: 12, dayOfWeek: 4}, remind)
 }
 
 const run = async ({
@@ -278,5 +308,6 @@ The following user-related commands only work on users who are not full members:
 - \`onboard ban\` bans the user. The reason is required and will be DMed to them.
 Whenever a user is admitted, they are also DMed to let them know.`,
     initialize,
+    ready,
     run,
 }
