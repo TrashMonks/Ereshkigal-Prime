@@ -329,6 +329,6 @@ The following user-related commands only work on users who are not full members:
 - \`onboard ban\` bans the user. The reason is required and will be DMed to them.
 Whenever a user is admitted, they are also DMed to let them know.`,
     initialize,
-    ready,
+    //ready,
     run,
 }
