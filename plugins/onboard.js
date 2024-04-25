@@ -67,6 +67,7 @@ const initialize = ({config}) => {
     }
 }
 
+/*
 const ready = ({guild}) => {
     const remind = async () => {
         const reminderChannel = guild.channels.resolve(reminderChannelId)
@@ -79,6 +80,7 @@ const ready = ({guild}) => {
     schedule.scheduleJob({hour: 12, dayOfWeek: 1}, remind)
     schedule.scheduleJob({hour: 12, dayOfWeek: 4}, remind)
 }
+*/
 
 const run = async ({
     view, admit, next, them, amount,
