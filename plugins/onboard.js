@@ -10,6 +10,7 @@ let reminderMessage
 let memberRoleId
 let patronRoleIds
 let freezerRoleIds
+let commandPrefix
 
 const initialize = ({config}) => {
     ({
@@ -21,6 +22,7 @@ const initialize = ({config}) => {
         patronRoleIds,
         freezerRoleIds,
     } = config?.onboarding ?? {})
+    commandPrefix = config.commandPrefix
 
     if (onboardingCategoryIds === undefined) {
         fatal(
@@ -149,8 +151,7 @@ const run = async ({
         await message.reply('I am unable to perform that operation on someone who is a full member of the server.')
     // We're permitting a user to enter.
     } else if (admit) {
-        await admitMember(who)
-        await message.reply(`🌈${who} has been granted access to the server.`)
+        await admitMember(who, message, true)
     // The remaining commands require a reason to be given.
     } else if (reason !== undefined && reason.length === 0) {
         await message.reply('You must provide a non-empty reason.')
@@ -190,14 +191,30 @@ const run = async ({
     }
 }
 
-const admitMember = async (member, message) => {
+const admitMember = async (member, message, direct) => {
     if (member.roles.cache.has(memberRoleId)) {
-        message.reply(`${member} is already a member.`)
+        await message.reply(`${member} is already a member.`)
         return
+    }
+
+    if (isFrozen(member)) {
+        if (!direct) {
+            await message.reply(`${member} is frozen in the queue. If you wish to admit anyway, use \`${commandPrefix}onboard admit ${member}\`.`)
+            return
+        } else {
+            for (freezerRoleId of freezerRoleIds) {
+                await member.roles.remove(freezerRoleId)
+            }
+        }
     }
 
     await member.roles.add(memberRoleId)
     const content = `🌈${member} has been granted access to the server.`
+
+    if (direct) {
+        message.reply(content)
+    }
+
     const admissionChannel =
         await member.guild.channels.resolve(admissionChannelId)
     await admissionChannel.send(content)
@@ -270,9 +287,11 @@ const isNotInTicket = (ticketChannels) => (member) =>
     !ticketChannels.some((channel) =>
         channel.permissionsFor(member).has('VIEW_CHANNEL'))
 
-// Is the given member not being held back in the airlock?
-const isNotFrozen = (member) =>
-    !freezerRoleIds.some((freezerRoleId) => member.roles.cache.has(freezerRoleId))
+// Is the given member being held back in the airlock?
+const isFrozen = (member) =>
+    freezerRoleIds.some((freezerRoleId) => member.roles.cache.has(freezerRoleId))
+
+const isNotFrozen = (member) => !isFrozen(member)
 
 // Order the two given members by ascending join date. This is used with
 // sorting functions expecting negative, zero, or positive based on an order.
