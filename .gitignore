@@ -1,4 +1,4 @@
 node_modules/
 banners/
-config.json
+config.toml
 permissions.json

@@ -1,13 +1,12 @@
 'use strict'
 
+require('toml-require').install()
 const {readdir} = require('fs/promises')
 const {Client} = require('discord.js')
 const {parseUsage, parseArguments, UsageSyntaxError} = require('./arguments')
-const {loadConfig, saveConfig} = require('./config')
 const {info, fatal, checkFatal} = require('./log')
 const {PermissionSet} = require('./permissions')
-const defaultConfigFileName = './config.default.json'
-const configFileName = './config.json'
+const configFileName = './config.toml'
 const pluginDirectoryName = './plugins'
 
 // Add ANSI sequences to the given string that cause a terminal to bold it.
@@ -18,13 +17,6 @@ const logDiscordMessage = (message) => {
     console.log(
         bold(`<${username}#${discriminator}>`) + ' ' + message.cleanContent
     )
-}
-
-const saveMainConfig = async () => {
-    await saveConfig({
-        fileName:   configFileName,
-        config:     bot.config,
-    })
 }
 
 const prettyUsage = (prefix, name, usage) => {
@@ -177,22 +169,27 @@ void (async () => {
 
     info('Loading configuration...')
 
-    const config = bot.config = loadConfig({
-        fileName:           configFileName,
-        defaultFileName:    defaultConfigFileName,
-    })
-
-    await saveMainConfig()
+    let config
+    try {
+        config = require(configFileName)
+    } catch (error) {
+        if (error.code === 'MODULE_NOT_FOUND') {
+            config = Object.create(null)
+        } else {
+            throw error
+        }
+    }
+    bot.config = config
 
     if (config.token == null) {
         fatal(
-'Please provide a bot token by editing the "token" field in config.json. This is required so the bot can authenticate with Discord.'
+`Please provide a bot token by editing the "token" field in ${configFileName}. This is required so the bot can authenticate with Discord.`
         )
     }
 
     if (config.guildId == null) {
         fatal(
-'Please provide a guild ID by editing the "guildId" field in config.json. This is required because the bot is designed to work with only one guild.'
+`Please provide a guild ID by editing the "guildId" field in ${configFileName}. This is required because the bot is designed to work with only one guild.`
         )
     }
 
@@ -247,7 +244,6 @@ void (async () => {
     }
 
     console.groupEnd()
-    await saveMainConfig()
     checkFatal()
 
     // Connect to Discord.
