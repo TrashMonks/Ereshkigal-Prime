@@ -1,5 +1,5 @@
 {
-  "name": "Ereshkigal",
+  "name": "ereshkigal",
   "version": "0.0.0",
   "main": "index.js",
   "private": true,
@@ -9,6 +9,6 @@
     "toml-require": "^1.2.0"
   },
   "description": "This is a Discord bot with plugin architecture inspired by [LHBot](https://github.com/mindset-tk/LHBot). It's designed specifically to help with administrative tasks for the *Caves of Qud* Discord.",
-  "author": "helado de brownie",
+  "author": "suno lili So",
   "license": "MIT"
 }
