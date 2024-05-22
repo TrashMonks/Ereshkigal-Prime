@@ -1,12 +1,13 @@
 'use strict'
 
 require('toml-require').install()
-const {readdir} = require('fs/promises')
+const {copyFile, readdir} = require('fs/promises')
 const {Client} = require('discord.js')
 const {parseUsage, parseArguments, UsageSyntaxError} = require('./arguments')
 const {info, fatal, checkFatal} = require('./log')
 const {PermissionSet} = require('./permissions')
 const configFileName = './config.toml'
+const defaultConfigFileName = './config.default.toml'
 const pluginDirectoryName = './plugins'
 
 // Add ANSI sequences to the given string that cause a terminal to bold it.
@@ -165,8 +166,6 @@ const onMessageCreate = async (message) => {
 }
 
 void (async () => {
-    // Load the configuration.
-
     info('Loading configuration...')
 
     let config
@@ -174,7 +173,12 @@ void (async () => {
         config = require(configFileName)
     } catch (error) {
         if (error.code === 'MODULE_NOT_FOUND') {
-            config = Object.create(null)
+            // The config is missing. Create one.
+            await copyFile(defaultConfigFileName, configFileName)
+            config = require(configFileName)
+            info(
+`A new config file was created for you, ${configFileName}. You will need to edit it to configure the bot.`
+            )
         } else {
             throw error
         }

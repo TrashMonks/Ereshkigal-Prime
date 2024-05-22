@@ -1,0 +1,24 @@
+# If this file is called config.default.toml, you don't need to edit it to
+# configure the bot. If it's config.toml, follow the instructions in comments.
+
+# A bot token is required to log in to Discord. WARNING: Anyone with your token
+# can control your bot! See https://discord.com/developers/applications for
+# more information.
+# Uncomment the following line and paste a token between the quotes.
+#token = ""
+
+# The bot is designed to work in no more than one guild. On desktop, a guild's
+# ID can be found by right clicking its icon and clicking "Copy Server ID".
+# Uncomment the following line and paste a guild ID between the quotes.
+#guildId = ""
+
+# Some plugins assume a central log channel. On desktop, a channel's ID can be
+# found by right clicking the channel and clicking "Copy Channel ID".
+# Uncomment the following line and paste a log channel ID between the quotes.
+#logChannelId = ""
+
+# The bot interprets messages starting with the command prefix as commands.
+commandPrefix = "!"
+
+# Each plugin may request its own settings. Run the bot to find out what they
+# are, then add them as needed.
