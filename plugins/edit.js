@@ -2,7 +2,7 @@ const fetch = require('../fetch')
 
 const run = async ({messageToEdit, newContent, messageToCopy}, message) => {
     if (!messageToEdit.editable) {
-        message.reply('I am unable to edit that message.')
+        await message.reply('I am unable to edit that message.')
         return
     }
 

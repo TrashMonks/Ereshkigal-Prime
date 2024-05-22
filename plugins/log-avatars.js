@@ -49,7 +49,7 @@ module.exports = {
             const newAvatar = newUser.displayAvatarURL({dynamic: true})
 
             if (oldAvatar !== newAvatar) {
-                logChannel.send({
+                await logChannel.send({
                     content: `${newUser} changed avatar.`,
                     embeds: [
                         {

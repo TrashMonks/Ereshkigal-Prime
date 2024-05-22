@@ -4,21 +4,11 @@ require('toml-require').install()
 const {copyFile, readdir} = require('fs/promises')
 const {Client} = require('discord.js')
 const {parseUsage, parseArguments, UsageSyntaxError} = require('./arguments')
-const {info, fatal, checkFatal} = require('./log')
+const {info, fatal, checkFatal, logDiscordMessage} = require('./log')
 const {PermissionSet} = require('./permissions')
 const configFileName = './config.toml'
 const defaultConfigFileName = './config.default.toml'
 const pluginDirectoryName = './plugins'
-
-// Add ANSI sequences to the given string that cause a terminal to bold it.
-const bold = (string) => `\x1b[1m${string}\x1b[m`
-
-const logDiscordMessage = (message) => {
-    const {username, discriminator} = message.author
-    console.log(
-        bold(`<${username}#${discriminator}>`) + ' ' + message.cleanContent
-    )
-}
 
 const prettyUsage = (prefix, name, usage) => {
     const argStrings = []
@@ -66,7 +56,6 @@ let lastMembersUpdate
 const updateMembersCache = async (guild) => {
     const now = Date.now()
     if (lastMembersUpdate == null || now - lastMembersUpdate >= 1000 * 60 * 30) {
-        console.log('updated!')
         await guild.members.fetch()
         lastMembersUpdate = now
     }

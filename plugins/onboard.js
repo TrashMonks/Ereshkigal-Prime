@@ -1,5 +1,5 @@
 const schedule = require('node-schedule')
-const {fatal} = require('../log')
+const {info, fatal} = require('../log')
 
 const BATCH_ADMISSION_CAP = 50
 
@@ -226,7 +226,7 @@ const admitMember = async (member, message, direct) => {
 "You have been admitted to the Caves of Qud server. Please make sure you've reviewed https://discord.com/channels/214532333900922882/459836691822411786. See https://discord.com/channels/214532333900922882/735270006312402985 for additional useful information."
         )
     } catch (_) {
-        console.log(`I was unable to DM ${member}.`)
+        info(`I was unable to DM ${member}.`)
     }
 }
 
