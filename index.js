@@ -186,7 +186,7 @@ void (async () => {
         )
     }
 
-    bot.permissions = new PermissionSet(require('./permissions.json'))
+    bot.permissions = new PermissionSet(config.permissions)
 
     // Load all plugins.
     // Loading a plugin consists of:

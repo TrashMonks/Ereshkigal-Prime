@@ -20,5 +20,39 @@
 # The bot interprets messages starting with the command prefix as commands.
 commandPrefix = "!"
 
+# The permissions system determines who can use what commands in what
+# channels. None of the role or channel names are hardcoded. Define whatever
+# ones are needed.
+# WARNING: Many commands could be very destructive if ordinary server members
+# could run them. Consider carefully what permissions are appropriate for your
+# server!
+
+[permissions.roles]
+# Each field is a name associated with a list of role IDs. This is done so
+# they can be referred to by neat names inside of rules. On desktop, a role's
+# ID can be found by clicking the picture of someone with that role, right
+# clicking the role, and clicking "Copy Role ID". Make sure each ID is quoted.
+staff = []
+
+[permissions.channels]
+# Each field is a name associated with a list of channel IDs. On desktop, a
+# channel's ID can be found by right clicking the channel and clicking "Copy
+# Channel ID". Make sure each ID is quoted.
+
+# Define one or more rules, beginning each with a [[permissions.allowed]]
+# heading. Each rule specifies:
+# - a list of roles, using the names specified under [permissions.roles] above;
+# - a list of commands, or the string "*" for all commands; and
+# - a list of channels, using the names specified under [permissions.channels],
+#   or the string "*" for all channels.
+# Whenever someone tries to run a command, the bot will check if any rule
+# grants permissions for any one of that user's roles to run the given command
+# in the given channel. If there is one, it will run; otherwise, it will not.
+
+[[permissions.allowed]]
+roles = ["staff"]
+commands = "*"
+channels = "*"
+
 # Each plugin may request its own settings. Run the bot to find out what they
 # are, then add them as needed.
