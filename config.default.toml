@@ -20,6 +20,18 @@
 # The bot interprets messages starting with the command prefix as commands.
 commandPrefix = "!"
 
+# If discoverPlugins is true, the bot will load any plugins it finds in the
+# plugins directory. You can explicitly enable and disable plugins in the
+# plugins section, below.
+# Uncomment the following line to enable automatic loading of plugins.
+#discoverPlugins = true
+
+[plugins]
+# Add entries here to enable and disable specific plugins. The name given
+# must match the plugin's file name up to just before the first dot, if any.
+help = true
+onboard = false
+
 # The permissions system determines who can use what commands in what
 # channels. None of the role or channel names are hardcoded. Define whatever
 # ones are needed.

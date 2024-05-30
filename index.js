@@ -198,7 +198,31 @@ void (async () => {
     // GUILDS, GUILD_MEMBERS, and GUILD_MESSAGES intents are always requested.
 
     console.group('Loading plugins...')
-    const pluginFileNames = await readdir(pluginDirectoryName)
+
+    // Decide which plugins to load.
+
+    // If discoverPlugins is set to true, find plugins by reading the plugins
+    // directory.
+    const pluginFileNames =
+        config.discoverPlugins ? new Set((await readdir(pluginDirectoryName)).map((fileName) => fileName.match(/^[^.]*/)[0]))
+      : /* otherwise */          new Set
+
+    if (config.plugins === undefined) {
+        config.plugins = Object.create(null)
+    }
+
+    // Handle all plugins that are explicitly enabled or disabled.
+    // Note that plugins are resolved by their module name, not the plugin name
+    // given in their exports, because they're not required in the first place
+    // if they're disabled.
+    for (const pluginName of Object.keys(config.plugins)) {
+        if (config.plugins[pluginName]) {
+            pluginFileNames.add(pluginName)
+        } else {
+            pluginFileNames.delete(pluginName)
+        }
+    }
+
     const intentsSet = new Set(['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'])
     const plugins = bot.plugins = new Map
 
