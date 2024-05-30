@@ -16,9 +16,7 @@ These instructions assume some knowledge of Discord, command line, git, and JSON
 
 1. Clone this repository and set it as the working directory. (All commands are assumed to be run in the root of this repository.)
 2. Run `npm ci` to install dependencies. (*Do not* run `npm install`; this can fetch different versions of the dependencies than the ones that were developed against.)
-3. Run `node .`. Follow the directions in your new `config.toml` file as well as the ones printed to the terminal.
-    - Read the whole config file! You need to uncomment the commented out fields (indicated in the file) and add at least one role to give command permissions to.
-    - If you would rather disable a plugin than follow its instructions, delete the file of the appropriate name from `plugins/` or else move it elsewhere. You can re-enable it later by recreating the file, e.g., with `git reset`.
+3. Run `node .`. Follow the directions in your new `config.toml` file as well as the ones printed to the terminal. **Read the whole config file!** You need to uncomment the commented out fields (indicated in the file) and add at least one role to give command permissions to.
 4. Run `node .` again. If `Done.` appears in the output, the bot has successfully booted and connected to Discord.
 
 Once the bot is running, it will give some useful information if you post `!help` where it can see it and reply. (`!` is the *default* command prefix; if you've changed it, put whatever you changed it to in front of `help` instead.)

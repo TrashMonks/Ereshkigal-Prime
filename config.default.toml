@@ -23,8 +23,8 @@ commandPrefix = "!"
 # If discoverPlugins is true, the bot will load any plugins it finds in the
 # plugins directory. You can explicitly enable and disable plugins in the
 # plugins section, below.
-# Uncomment the following line to enable automatic loading of plugins.
-#discoverPlugins = true
+# Change false to true on the following line to automatically load plugins.
+discoverPlugins = false
 
 [plugins]
 # Add entries here to enable and disable specific plugins. The name given
