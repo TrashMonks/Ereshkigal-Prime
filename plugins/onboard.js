@@ -84,7 +84,7 @@ const ready = ({guild}) => {
 
 const run = async ({
     view, admit, next, them, amount,
-    kick, ban, who, reason
+    kick, ban, freeze, who, reason, request
 }, message) => {
     const guild = message.guild
 
@@ -188,6 +188,25 @@ const run = async ({
         await message.reply(`⛔${who} has been **banned** with this reason: ${reason}`)
         await who.ban({reason})
     // A fallback case in case of programming mistakes.
+    } else if (freeze) {
+        if (isFrozen(who)) {
+            message.reply('That user is already frozen.')
+            return
+        } else if (request.length === 0) {
+            message.reply('You must give a request that will be DMed to the user.')
+            return
+        }
+
+        // The first freezer role is the "main" one.
+        await who.roles.add(freezerRoleIds[0])
+
+        try {
+            await who.send('The Caves of Qud Discord onboarding team has a request before you may enter. Once you have done it or if you have any questions, please DM a Mayor. Here is the request:')
+            await who.send(request)
+            message.reply('I have successfully frozen and DMed that user.')
+        } catch (_) {
+            message.reply('I was unable to DM that user. I have frozen them anyway.')
+        }
     } else {
         await message.reply('Hmm, this message was supposed to be impossible.')
     }
@@ -316,6 +335,7 @@ module.exports = {
         '"admit" who:member',
         '"kick" who:member ...reason',
         '"ban" who:member ...reason',
+        '"freeze" who:member ...request'
     ],
     synopsis: 'Handle onboarding of new members.',
     description:
@@ -327,6 +347,7 @@ The following user-related commands only work on users who are not full members:
 - \`onboard admit\` grants full entry to the server to the specified user.
 - \`onboard kick\` kicks the user. The reason is required and will be DMed to them.
 - \`onboard ban\` bans the user. The reason is required and will be DMed to them.
+- \`onboard freeze\` freezes the user in the queue. This is for sending a user a request for them to follow before being admitted, such as changing their profile picture. They will also be DMed instructions on what to do, so just writing a request such as "please change your picture" is fine.
 Whenever a user is admitted, they are also DMed to let them know.`,
     initialize,
     //ready,
